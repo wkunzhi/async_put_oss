@@ -33,7 +33,7 @@ def put_img():
     url = r.rpop(list_name)
     input = requests.get(url)
     if input.status_code == 200:
-        file_name = 'food/album/' + url[url.rfind('/') + 1: None if url.find('@') < 0 else url.find('@')]
+        file_name = url  # this is file name
         obj = bucket.put_object(file_name, input)
         if obj.status == 200:
             print('OK', file_name)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     print('专辑总图数量', list_len)
     pool = ThreadPoolExecutor(6)  # 设置线程池大小，默认等于cpu核数
     for i in range(list_len):
-        list_len = pool.submit(put_img)
+        pool.submit(put_img)
 
     pool.shutdown(wait=True)
     print('主进程')
